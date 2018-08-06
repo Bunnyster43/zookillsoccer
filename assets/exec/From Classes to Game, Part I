@@ -1,0 +1,178 @@
+Building the Game - Part II Compositing
+==========================================================================
+1. CREATE MARKUP (HTML and CSS)
+================
+
+a. Make 3 screens in HTML markup, as DIV elements inside the <div id="game"> tag
+	<div id='start-screen'></div>
+	<div id='game-screen'></div>
+	<div id='end-screen'></div>
+
+b. Inside each screen
+	  - create header, section, footer, with classes and ids defined by Instructor
+	Inside start-screen section
+	  - create "start game" button
+	Inside game-screen section
+	  - create canvas
+	Inside end-screen section
+	  - Create "replay" and "instructions" buttons
+
+c. Following the Instructor, use an HTML5 css button generator to style the button
+
+d. Following the Instructor, add some default SCSS to see boxes onscreen
+
+e. In the SCSS, hide all the screens you just made
+
+==========================================================================
+2. Add Properties and Methods to GamePiece Class
+===================
+
+a. Add new functions to GamePiece
+ /** 
+   * return the class of the object
+   */
+ getClass () {
+   return this.constructor.name;
+ }
+
+
+b. Add update and draw functions to GamePiece
+ update() {
+ 	//empty for now
+ }
+ draw() {
+ 	//empty for now
+ }
+
+c. Add polymorphic .update() and .draw() methods to Characters. These will 
+   overwrite the default GamePiece .update() and .draw()
+
+d. Add getCollisionRect and getBoundsRect functions to GamePiece. These will 
+   be used to find collisions with walls and between Characters
+
+==========================================================================
+3. Add Properties and Methods to Game Class
+====================
+
+a. Add a copyright notice
+		//game copyright
+		this.warning = "This game belongs to us, and nobody else.";
+
+b. Add a TIMEOUT variable (for animation later)
+		//game reverts to StartScreen if unplayed
+		this.TIMEOUT = 5;
+
+c. Add names of game Screens (e.g. 'game-screen')
+		// define Id link to DOM
+		this.START_SCREEN_ID = "start-screen";
+		this.GAME_SCREEN_ID = "game-screen";
+		this.END_SCREEN_ID = "end-screen";
+
+d. Add arrays to store our Screens and Characters
+		// model storage, screens
+		this.screens = [];
+
+		// model storage, dynamic characters
+		this.displayCharacters = [];
+
+e. Add functions init(), loadGame, startGame(), endGame(), elapsed(), checkIfComplete(), 
+   update(), draw(), gameLoop()
+
+==========================================================================
+4. Build Screen Classes
+=======================
+
+In the Screen class, add the following properties and methods:
+
+a. Save a reference to our parent Game object
+ 	this.game = config.game;
+
+b. Screens are defined in HTML, so save a reference to our DOM id
+ 	this.screenId = config.id;
+ 	We need to add the id of the DOM element we created (e.g. 'game-screen') to the 
+ 	constructor and the object passed to Screen
+
+c. Screens also save a reference to the game object in the constructor
+	this.game = config.game;
+	We need to add this to the object passed to Screen and its descendant classes.
+
+d. add new functions, loadScreen(), showScreen(), hideScreen(), showHeader(), hideHeader(), 
+   showFooter(), hideFooter(), addWarning()
+
+d. Screens automatically write a copyright into their footer
+
+ 	addWarning () { // call from constructor
+ 		this.dom.querySelector('.footer').innerHTML = this.game.warning;
+ 	}
+
+f. Following the Instructor, add code to the above functions. 
+
+h. Bind the "play game" button on StartScreen to "startGame" function in Game with addEventListener
+
+==========================================================================
+5. Add Properties and Methods to StartScreen
+============================
+
+a. Add new functions
+   loadIdentity(), loadInstructions()
+
+
+=========================================================================
+6. Add Properties and Methods to GameScreen
+============================
+a. Add new functions
+   loadCages(), loadAnimalArea(), loadPlayerArea()
+
+b. Hide the header and footer
+ 	//GameScreen should hide its local header and footer
+ 	this.hideHeader();
+ 	this.hideFooter();
+
+c. Following the Instructor, add code to the Game.startGame() and 
+   Game.loadGame() functions
+
+d. Add calls to new functions in constructor
+ 	// Load sub-objects
+ 	this.cages   = this.loadCages();
+ 	this.animalArea = this.loadAnimalArea();
+ 	this.playerArea = this.loadPlayerArea();
+
+
+===========================================================================
+6. Add Properties and Methods to EndScreen
+============================
+
+a. Add new functions
+   loadInputScore(), loadHighScores(), bindReplay, bindInstructions()
+
+b. Following the Instructor, write the bindReplay() and bindInstructions() 
+   methods linking to Game.startGame() and Game.loadGame()
+
+c. Add calls to new functions in constructor
+ 	// Load EndScreen sub-objects
+ 	this.loadInputScore();
+ 	this.loadHighScores();
+
+ 	// Bind "play again" and "instructions" buttons.
+ 	this.bindReplay();
+ 	this.bindInstructions();
+
+===========================================================================
+7. Write startGame Function
+============================
+	startGame () {
+
+		// initialize elapsed time
+		this.startTime = new Date();
+
+		// show GameScreen, hide others
+		console.log("starting game");
+		this.screens[this.START_SCREEN_ID].hideScreen();
+		this.screens[this.END_SCREEN_ID].hideScreen();
+		this.screens[this.GAME_SCREEN_ID].showScreen();
+		this.gameLoop();
+	}
+
+Test to make sure the StartScreen is loading...
+
+

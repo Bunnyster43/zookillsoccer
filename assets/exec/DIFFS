@@ -1,0 +1,204 @@
+PART I = DIFFS FOR CREATING FINAL GAME
+
+
+
+----------------------------------------------------------------------------------
+1.
+
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\dist\public
+	Added audio folder to /public
+
+
+
+----------------------------------------------------------------------------------
+2.
+
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js
+	Added Sounder.js
+  Added Mover.js
+  Added Collider.js
+
+
+
+----------------------------------------------------------------------------------
+3.
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\dist\public\audio
+	Added sound files to /public/audio folder
+
+
+
+----------------------------------------------------------------------------------
+4.
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js\Game.js:
+
+
+
+   40  import PlayerArea from './PlayerArea.js';
+   41  
+   42: // >>>>>>>>>>>ADDED IN WEEK 11
+   43  import Collider from './Collider.js';
+   44  import Sounder from './Sounder.js';
+   45: // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   ..
+
+
+  176   startGame () {
+  177  
+  178:    // >>>>>>>>>>>ADDED IN WEEK 11
+  179     // add collision matrix
+  180     this.collider = new Collider(this.displayCharacters);
+  181     //load audio samples
+  182     this.soundPool = new Sounder();
+  181:    // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+  ...
+
+
+
+  267   gameLoop () {
+  268  
+  ..
+  274:    // >>>>>>>>>>>ADDED IN WEEK 11
+  275     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  276     // END ADDED WEEK 11<<<<<<<<<<<<<
+  ..
+
+
+
+----------------------------------------------------------------------------------
+5.
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js\Character.js:
+   11   import StaticImage from './StaticImage.js';
+   12  
+   13:  // >>>>>>>>>>>ADDED IN WEEK 11
+   14   import Mover from './Mover.js';
+   15   import Collider from './Collider.js';
+   16   // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   31 
+   .. 
+   36:      // >>>>>>>>>>>ADDED IN WEEK 11
+   37       this.mover = new Mover(this);
+   38       // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+
+
+
+----------------------------------------------------------------------------------
+6.
+
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js\Player.js:
+    7   import Character from './Character.js';
+    8  
+    9:  // >>>>>>>>>>>ADDED IN WEEK 11
+   10   import Mover from './Mover.js';
+   11   import Collider from './Collider.js';
+   ..
+   17       super (config);
+   18  
+   19:      // >>>>>>>>>>>ADDED IN WEEK 11
+   20       this.mover.initSlew(); //enables Player movement
+   21       // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   22     }
+   23  
+   24:    // >>>>>>>>>>>ADDED IN WEEK 11
+   25     update () {
+   26       this.mover.updateSlew(); //smooths motion, applies Collider
+   27     }
+   28     // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   29   } //end of class
+
+
+
+----------------------------------------------------------------------------------
+7.
+
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js\Trump.js:
+    7   import Character from './Character.js';
+    8  
+    9:  // >>>>>>>>>>>ADDED IN WEEK 11
+   10   import Mover from './Mover.js';
+   11   import Collider from './Collider.js';
+   ..
+   17       super (config);
+   18  
+   19:      // >>>>>>>>>>>ADDED IN WEEK 11
+   20       //Trump gets PingPong motion
+   21       this.mover.initPingPong(0, this); //pingpong won't start yet
+   22       // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   23   
+   24     }
+   25  
+   26:    // >>>>>>>>>>>ADDED IN WEEK 11
+   27     update () {
+   28       this.mover.updatePingPong(); //allows pingpong motion
+   29     }
+   30     // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   31
+   32   } //end of class
+
+
+
+----------------------------------------------------------------------------------
+6.
+
+C:\Users\Pete\Documents\pete\websites\plyojump2\games\zookillsoccer\modules\js\Animal.js:
+   11   import StaticImage from './StaticImage.js';
+   12  
+   13:  // >>>>>>>>>>>ADDED IN WEEK 11
+   14   import Mover from './Mover.js';
+   15   import Collider from './Collider.js';
+   16   // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   ..
+   19   		super (config);
+   20  
+   21:  		// >>>>>>>>>>>ADDED IN WEEK 11
+   22   		// Animals get RandomWalk motion
+   23   		this.mover.initRandomWalk(0.02, 'bottom');
+   24   		// END ADDED IN WEEK 11<<<<<<<<<<<<<<
+   ..
+   28   	}
+   29  
+   30:  	// >>>>>>>>>>>ADDED IN WEEK 11
+   31   	update () {
+   32   		this.mover.updateRandomWalk();
+   33   		}
+   34   	// END ADDED IN WEEK 11<<<<<<<<<<<<<<
+
+
+
+PART II: = BRAIN SURGERY (add audio)
+
+----------------------------------------------------------------------------------
+7.
+
+/Volumes/Work/week011/zookillsoccer/modules/js/Game.js:
+
+176  startGame () {
+..      
+    // >>>>>>>>>>>ADDED IN WEEK 11
+    //load audio samples
+    this.soundPool = new Sounder();
+    this.soundPool.addSound('kick', 0.7);
+    this.soundPool.addSound('lion', 0.7);
+    this.soundPool.addSound('tiger', 0.7);
+    this.soundPool.addSound('bear', 0.7);
+    this.soundPool.addSound('gorilla', 0.7);
+    // END ADDED IN WEEK 11<<<<<<<<<<<<<<
+
+
+
+
+/Volumes/Work/week011/zookillsoccer/modules/js/Mover.js:
+  309                  // start the kicking sound
+  310                  if (this.game.soundPool) {
+  311:                     this.game.soundPool.playSound('kick');
+  312                  }
+  313  
+  ...
+
+
+  377          // Play animal's opening sound ONCE at start of movement
+  378          if (this.firstMove && this.game.soundPool) {
+  379:             this.game.soundPool.playSound(this.obj.constructor.name.toLowerCase(), 0.7);
+  380              this.firstMove = false;
+  381          }
+
+

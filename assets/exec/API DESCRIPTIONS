@@ -1,0 +1,177 @@
+API DESCRIPTIONS
+
+=========================
+@class Mover.js
+
+@description updates motion of all Characters, and handles various collisions 
+defined in the collision matrix for the game.
+
+This class should be imported into all Character objects.
+
+@param Character this when initializing the Character, pass in the character to 
+the Mover object, e.g. 
+
+ export default class Character extends GamePiece {
+ 	...
+	this.mover = new Mover(this);
+	...
+
+---------------
+Dependencies
+
+Mover requires that the Collider class be added to the Game object to work.
+
+---------------
+PUBLIC METHODS
+
+@method initSlew
+@description slew object horizontally with keypresses. Adds event 
+listeners for keydown and keyup events. Used for 
+Player characters moving horizontally in the PlayerArea. Should be 
+added to the constructor for Player.
+
+-----------------------------------------------------------------
+@method initRandomWalk
+@description init random motions along a path from the 
+top to the bottom of the screen. Used for 
+Animal characters moving through the AnimalArea. Should be added 
+to the constructor for Animal.
+@param Number prefSpeed the speed of movement.
+@param String direction the direction the Animal ultimately moves, 
+- 'top': overall movement up the screen
+- 'left': overall movement to the screen left
+- 'bottom': overall movement to the screen bottom (DEFAULT)
+- 'right': overall movement to the screen right
+- 'return': return immediately to the Cage area
+- 'caged': stay in the Cage area
+
+
+-----------------------------------------------------------------
+@method initPingPong
+@description init a ping-pong style motion. Used for 
+Trump characters moving through the AnimalArea. Should be 
+added to the constructor for Trump.
+@param Number prefSpeed the speed of movement.
+
+
+-----------------------------------------------------------------
+@method updateSlew
+@description move back and forth horizontally, with a simple easing motion
+when left and right arrow keys are pressed. Handle collisions with the left 
+and right walls of the PlayerArea.
+Call in an update function inside the Character, e.g. 
+update () { updateRandomWalk(); }
+The main Game object automatically finds and 'fires' update() function in 
+all Characters.
+
+-----------------------------------------------------------------
+@method updateRandomWalk
+@description generate a random walk, with one preferred direction, 
+giving the meandering motion used by Animals. 
+Call in an update function inside the Character, e.g. 
+update () { updateRandomWalk(); }
+The main Game object automatically finds and 'fires' update() function in 
+all Characters.
+
+-----------------------------------------------------------------
+@method updatePingPong
+@description move in a ping-pong style.
+Call in an update function inside the Character, e.g. 
+update () { updateRandomWalk(); }
+The main Game object automatically finds and 'fires' update() function in 
+all Characters.
+Possible updates for motion:
+1. Collision with a Player (via kick() method) starts the Trump character moving
+2. Trump will bounce on all walls EXCEPT the bottom wall
+3. When the Trump intersects the bottom wall, they stop moving
+4. If they collide with an Animal, they bounce, and the Animal returns to its Cage.
+
+
+=========================
+@class Collider.js
+
+ @description create the collision matrix defining which objects can collide 
+ with which objects. Objects that can collide have their potential colliders 
+ added as references, e.g. Player.trump or Trump.player.
+
+ Add durng game initialization, passing in the list of Characters which can 
+ have collisions, according to the collision matrix.
+
+ 		this.collider = new Collider(this.displayCharacters);
+
+ @param Array characterArray the array of Characters who might be involved 
+ in collisions.
+
+---------------
+Dependencies
+
+Collider needs the array of Characters used in updates to work (see above)
+
+---------------
+PUBLIC METHODS
+
+None. 
+
+=========================
+@class Sounder.js
+
+ @description provide sounds that other objects can play. Detects the kinds 
+ of audio files the web brower can play, and serves the first file it finds in 
+ the /audio folder of the distribution. Audio files are accessed by custom names 
+ for playback.
+
+ Adapted from
+ @http://blog.sklambert.com/html5-canvas-game-html5-audio-and-finishing-touches/
+
+ Sounder.js should be loaded in the main Game initialization process.
+
+ In addition, the distribution MUST have an /audio directory with files in multiple 
+ audio formats:
+ MP3 (.mp3)
+ Ogg-Vorbis (.ogg)
+ WAV (.wav)
+
+ Audio Editors:
+ Audacity (free)
+ @link http://www.audacityteam.org/
+ ProTools ($$$)
+ @link http://www.avid.com/pro-tools
+
+ Audio converters:
+ @link http://media.io/
+ @link https://sourceforge.net/projects/audacity/
+ @link http://www.mediahuman.com/audio-converter/
+ @link http://www.html5audioconverter.com/
+
+ Audio Samples:
+ @link http://www.grsites.com/archive/sounds/category/25/?offset=20
+ @link https://www.freesound.org
+
+---------------
+Dependencies
+
+No dependencies.
+
+---------------
+PUBLIC METHODS
+
+	/** 
+	 * @method addSound
+	 * @description add a new sound. 
+	 * @param String name the name of the sound. The sound name 
+	 * must match the file containing the audio, e.g. for a sound called 
+	 * 'kick' there must be a file /audio/kick.mp3 
+	 * Possible formats (create them all during production)
+	 * - MP3 (.mp3)
+	 * - Ogg-Vorbis (.ogg)
+	 * - WAV (.wav)
+	 * @param Number volume the loudness of the sound, between 0 (silent) 
+	 * and 1.0 (as loud as possible).
+	 */
+
+	/** 
+	 * @method playSound
+	 * @description
+	 * @params String name the name of the sound. Must match the filename 
+	 * WITHOUT a file extension in the /audio folder for the game.
+	 */

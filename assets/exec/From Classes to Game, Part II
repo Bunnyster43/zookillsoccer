@@ -1,0 +1,212 @@
+Building the Game - Part II Compositing
+
+
+==========================================================================
+1. Change game canvas in HTML to 960 x 600
+
+==========================================================================
+2. Add Gereric Identity Assets (replace with your own)
+
+	a. Copy the Instructor's /img folder to your own project
+	- Animals
+	- Trumps
+	- Players
+	- Screen Backgrouns
+	- Logo/Identity
+
+==========================================================================
+3. Add new SCSS File
+
+   The goal is to change positioning in GameScreen to Absolute, 
+   and add CSS keeping the parent HTMl elements from collapsing.
+
+   a. copy the Instructor's SCSS file to your own project
+
+==========================================================================
+4. Add new properties to GamePiece
+===================================
+
+	a. Get files from the Instructor containing the new methods
+	b. Copy the methods to GamePiece.js
+
+    /** 
+     * Set a position for the object, also the position of the 
+     * DOM representation of the object
+     */
+    setDOMPosition (position) {
+        this.position = position;
+        if (this.dom) {
+            this.dom.style.top = position.top + 'px';
+            this.dom.style.left = position.left + 'px';
+        }
+    }
+
+    /** 
+     * Set the object size, also its DOM size
+     */
+    setDOMSize (size) {
+        this.size = size;
+        if (this.dom) {
+            this.dom.style.width = size.width + 'px';
+            this.dom.style.height = size.height + 'px';
+        }
+    }
+
+	/** 
+	 * Generic 'ready' function (e.g. for delayed asset loads)
+	 */
+	setReady (val) {
+		this.ready = val;
+	}
+
+
+==========================================================================
+5. Add new Objects for Image and Text
+
+	a. Following the Instructor, update your "composite" screems
+	b. Examine the new Text, and Image classifications
+	c. Copy the new Text and Image objects to your project
+
+==========================================================================
+6. Add new Objects for Area
+
+	a. Copy the new Area objects to your project
+
+==========================================================================
+6. Move some functions in Game to GameScreen
+
+	a. these functions make more sense in a Screen, since they are static.
+		- loadCageArea()
+		- loadAnimalArea()
+		- loadPlayerArea()
+
+==========================================================================
+7. Add Properties and Methods to Screen
+
+	a. load background images using CSS
+
+	// load a background image into the Screen
+ 	loadBackground (path, callback) {
+ 		console.log("loading:" + this.domId);
+ 		this.backgroundImage = new StaticImage(
+ 			{
+ 				name: this.name + '-image',
+ 				domId: this.id + '-image',
+ 				path: path,
+ 				callback: callback
+ 			}
+ 		);
+ 		this.backgroundImage.loadBackgroundImage(this.dom, path, callback);
+ 	}
+
+==========================================================================
+8. Add Properties and Methods to StartScreen
+============================
+
+	a. Following the Instructor, write the bindStart() function which links 
+   	   clicking the StartScreen button to moving to the GameScreen
+
+	// Make the start button open the main game screen
+	this.bindStart();
+
+	b. Add loading for 
+		- screen background image
+		- Identity
+		- Instruction text
+
+=========================================================================
+9. Add Area objects to GameScreen
+	
+	The Area objects provide collision detection (not done until Part III)
+
+	a. addCages() - also loads a cage.png image
+
+	b. addAnimalArea()
+
+	c. addPlayerArea()
+
+
+=========================================================================
+9. Add Properties and Methods to GameScreen
+============================
+a. Add new functions
+   loadCages(), loadAnimalArea(), loadPlayerArea()
+
+b. Hide the header and footer
+ 	//GameScreen should hide its local header and footer
+ 	this.hideHeader();
+ 	this.hideFooter();
+
+c. Add calls to new functions in constructor
+ 	// Load sub-objects
+ 	this.cages   = this.loadCages();
+ 	this.animalArea = this.loadAnimalArea();
+ 	this.playerArea = this.loadPlayerArea();
+
+
+
+===========================================================================
+10. Add an StaticImage object and draw() method to Characters
+======================
+
+	a. following the instructor, add new Imports for StaticImage
+	b. Following the Instructor, composite in an StaticImage into the Animal object
+	c. add the draw() function (using HTML5 canvas)
+
+	this.image = new StaticImage(
+ 		{
+ 			name: config.name + '-image',
+ 			path: config.path
+ 		}
+ 	);
+
+	draw (context) {
+		if (this.image) {
+			var img = this.image.data;
+			console.log('drawing')
+			if (img) {
+				// draw image into HTML5 canvas
+ 		 		context.drawImage(img, this.position.left, this.position.top);
+			}
+		}
+ 	}
+
+===========================================================================
+13. Write draw() Function in Game
+============================
+	draw () {
+
+		for (var i = 0, len = this.displayCharacters; i < len; i++) {
+
+			var character = this.displayCharacters[i];
+
+			displayCharacters[i].draw();
+		}
+	}
+
+===========================================================================
+8. Write gameLoop() Function in Game
+============================
+
+	a. Create the loop which draws animated characters
+
+	gameLoop () {
+
+		this.update();
+		this.draw();
+		
+		//console.log("looping...")
+		this.globalId = requestAnimationFrame(this.gameLoop.bind(this));
+	}
+
+	You should see the game images for Characters appear onscreeen
+
+===========================================================================
+9. Position characters
+
+	a. Adjust visual objects in Game.js
+		- You can change position
+		- You can change width and height
+
+	b. Also check your CSS boxes, adjust if necessary in Area.js
+

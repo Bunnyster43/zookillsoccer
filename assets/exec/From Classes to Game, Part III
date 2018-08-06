@@ -1,0 +1,37 @@
+===========================================================================
+10. Add Properties and Methods to EndScreen
+============================
+
+a. Add new functions
+   loadInputScore(), loadHighScores(), bindReplay, bindInstructions()
+
+b. Following the Instructor, write the bindReplay() and bindInstructions() 
+   methods linking to Game.startGame() and Game.loadGame()
+
+c. Add calls to new functions in constructor
+ 	// Load EndScreen sub-objects
+ 	this.loadInputScore();
+ 	this.loadHighScores();
+
+ 	// Bind "play again" and "instructions" buttons.
+ 	this.bindReplay();
+ 	this.bindInstructions();
+
+===========================================================================
+11. Write endGame Function
+============================
+	endGame () {
+
+		console.log("ending game");
+
+		// reset timer
+		this.startTime = 0;
+
+		// turn off animation
+		cancelAnimationFrame(this.globalId);
+		this.globalId = null;
+
+		// go to end screen
+		this.screens[this.GAME_SCREEN_ID].hideScreen();
+		this.screens[this.END_SCREEN_ID].showScreen();
+	}
